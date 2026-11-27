@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="天竺鼠新手飼主的口袋小幫手：聽懂叫聲、查食物能不能吃、觀察健康警訊、找動物醫院、闖關測驗。">
+  <title>天竺鼠新手飼主小幫手</title>
+
+  <!-- 字型：Noto Sans TC -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap">
+
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+  <!-- ==================== 頂端導覽列 ==================== -->
+  <header class="site-header">
+    <nav class="navbar" aria-label="網站導覽">
+      <a class="brand" href="#/" data-route="home">天竺鼠小幫手</a>
+      <div class="scroll">
+        <a href="#/" data-route="home">首頁</a>
+        <a href="#/sounds" data-route="sounds">聽懂叫聲</a>
+        <a href="#/food" data-route="food">能不能吃</a>
+        <a href="#/health" data-route="health">健康警訊</a>
+        <a href="#/vet" data-route="vet">找醫院</a>
+        <a href="#/quiz" data-route="quiz">闖關測驗</a>
+        <a href="#/contact" data-route="contact">聯絡我們</a>
+      </div>
+    </nav>
+    <!-- 特效層：小天竺鼠在整條導覽列上長草、吃草、亂跑（script.js 產生） -->
+    <div class="header-fx" id="headerFx" aria-hidden="true"></div>
+  </header>
+
+  <main id="main">
+
+    <!-- ==================== 首頁 ==================== -->
+    <div class="view" data-view="home" data-title="首頁">
+
+      <!-- 主視覺：草地背景 + 天竺鼠照片，點擊會彈跳並噴出大便 -->
+      <section class="band hero">
+        <div class="wrap">
+          <h1>你家天竺鼠，今天過得好嗎？</h1>
+          <p class="lead">天竺鼠新手飼主的口袋小幫手。在寵物店、餵食前、發現不對勁時，拿出手機馬上查。</p>
+          <div class="btns">
+            <a class="btn" href="#/sounds">開始學習</a>
+            <a class="btn ghost" href="#/quiz">直接挑戰測驗</a>
+          </div>
+
+          <div class="scene" id="scene" role="button" tabindex="0" aria-label="點一下天竺鼠，看牠開心地跳">
+            <svg viewBox="0 0 800 340" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+              <defs>
+                <!-- 一根牧草 -->
+                <g id="straw">
+                  <path d="M0 0 q20 -18 46 -10" fill="none" stroke="#c9a640" stroke-width="5" stroke-linecap="round"/>
+                </g>
+                <!-- 天竺鼠大便：微彎的長橢圓顆粒，帶一點纖維斑點 -->
+                <radialGradient id="poopFill" cx="40%" cy="35%" r="70%">
+                  <stop offset="0" stop-color="#9a7a62"/>
+                  <stop offset=".6" stop-color="#7a5a44"/>
+                  <stop offset="1" stop-color="#4f3626"/>
+                </radialGradient>
+                <g id="poop">
+                  <path d="M-11 -1 C-11 -5 -5 -5.5 0 -4.8 C5 -4.2 11 -4 11 0 C11 4 5 4.6 0 4.4 C-5 4.2 -11 3.4 -11 -1Z" fill="url(#poopFill)"/>
+                  <g fill="#c9ad92" opacity=".55">
+                    <circle cx="-6" cy="-1.5" r=".7"/><circle cx="-2" cy="1.5" r=".6"/><circle cx="3" cy="-2" r=".7"/>
+                    <circle cx="6.5" cy="1" r=".5"/><circle cx="0.5" cy="-0.2" r=".4"/>
+                  </g>
+                  <path d="M-8 -3 C-3 -4.2 3 -4 7 -3" fill="none" stroke="#b8987c" stroke-width=".9" stroke-linecap="round" opacity=".6"/>
+                </g>
+              </defs>
+
+              <!-- 草堆底座與後方牧草 -->
+              <ellipse cx="400" cy="318" rx="300" ry="26" fill="#b89640" opacity=".45"/>
+              <g id="hay"></g>
+
+              <!-- 天竺鼠照片（去背 webp） -->
+              <g class="pig" id="pig">
+                <ellipse cx="400" cy="312" rx="128" ry="10" fill="#000" opacity=".25"/>
+                <image href="images/guinea-pig.webp" x="262" y="62" width="276" height="254" preserveAspectRatio="xMidYMax meet"/>
+              </g>
+
+              <!-- 提示標籤：請摸牠 -->
+              <g class="pet-hint">
+                <rect x="214" y="44" width="112" height="38" rx="19" fill="#fff" stroke="#2b2116" stroke-width="3"/>
+                <text x="270" y="70" text-anchor="middle" font-size="20" font-weight="900" fill="#2b2116" font-family="Noto Sans TC, sans-serif">👆 請摸牠</text>
+                <path d="M300 82 l14 16 l-2 -16z" fill="#fff" stroke="#2b2116" stroke-width="3" stroke-linejoin="round"/>
+                <path d="M298 80 h16" stroke="#fff" stroke-width="4"/>
+              </g>
+
+              <!-- 前景牧草（蓋住照片下緣）與噴出來的大便 -->
+              <g id="hayFront"></g>
+              <g id="poops"></g>
+
+              <!-- 對話框 -->
+              <g id="bubble">
+                <path d="M600 40 h150 a20 20 0 0 1 20 20 v40 a20 20 0 0 1 -20 20 h-110 l-30 24 l6 -24 h-16 a20 20 0 0 1 -20 -20 v-40 a20 20 0 0 1 20 -20z" fill="#fff" stroke="#2b2116" stroke-width="3"/>
+                <text id="say" x="675" y="92" text-anchor="middle" font-size="30" font-weight="900" fill="#2b2116" font-family="Noto Sans TC, sans-serif">咻咻！</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- 單元入口（背景：天竺鼠大便雨） -->
+      <section class="band rain-band">
+        <div class="poop-rain" data-drops="36" aria-hidden="true"></div>
+        <div class="wrap">
+          <h2>從這裡開始</h2>
+          <div class="grid">
+            <a class="card entry" href="#/sounds"><h3>🔊 聽懂叫聲</h3><p>咻咻叫、磨牙聲，各代表什麼情緒？</p></a>
+            <a class="card entry" href="#/food"><h3>🥬 能不能吃</h3><p>維生素 C 與每日飲食原則，翻牌查食物。</p></a>
+            <a class="card entry" href="#/health"><h3>🩺 健康警訊</h3><p>每天 1 分鐘，勾選觀察到的狀況。</p></a>
+            <a class="card entry" href="#/vet"><h3>📍 找醫院</h3><p>先找好能看特殊寵物的動物醫院。</p></a>
+            <a class="card entry" href="#/quiz"><h3>🏆 闖關測驗</h3><p>5 題測驗，看看你是不是合格飼主。</p></a>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ==================== 聽懂叫聲 ==================== -->
+    <div class="view" data-view="sounds" data-title="聽懂叫聲" hidden>
+      <section class="band rain-band">
+        <div class="poop-rain" data-drops="70" aria-hidden="true"></div>
+        <div class="wrap">
+          <h2>牠在說什麼？</h2>
+          <p class="lead">天竺鼠會用不同的叫聲表達情緒。先猜猜看，再點卡片看答案。</p>
+          <div class="btns">
+            <a class="btn ghost" href="https://www.youtube.com/results?search_query=guinea+pig+sounds+and+meanings">▶ 到 YouTube 聽真實叫聲</a>
+          </div>
+          <div class="video">
+            <iframe src="https://www.youtube.com/embed/oBaeD8brI58?si=Wb7sCakZ1kFJNDra" title="天竺鼠叫聲介紹影片" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          </div>
+          <!-- 叫聲卡片（script.js 依資料產生） -->
+          <div class="grid" id="soundGrid"></div>
+          <p class="small">資料來源：<a href="https://petmd.com/exotic/sounds-guinea-pigs">PetMD，獸醫師 Lauren Jones（2022）</a>；爆米花跳：<a href="https://www.webmd.com/pets/why-do-guinea-pigs-chatter-their-teeth">WebMD Pets</a></p>
+        </div>
+      </section>
+    </div>
+
+    <!-- ==================== 能不能吃 ==================== -->
+    <div class="view" data-view="food" data-title="能不能吃" hidden>
+      <section class="band warm">
+        <div class="wrap">
+          <h2>餵前先查：這個能吃嗎？</h2>
+          <div class="vc">
+            <div class="card">
+              <h3>為什麼每天都要維生素 C</h3>
+              <p>天竺鼠和人類一樣，<b>無法自己製造維生素 C</b>，必須從食物中獲得。缺乏時可能毛色粗糙、跛腳、體重下降、腹瀉，嚴重時可能死亡。</p>
+              <p class="big">10 mg</p>
+              <p>每公斤體重每天至少需要的維生素 C；懷孕母鼠約需 30 mg。</p>
+            </div>
+            <div class="card">
+              <h3>一天的飲食大原則</h3>
+              <ol class="rules">
+                <li><b>牧草無限量</b>：提摩西草等禾本科牧草是主食。</li>
+                <li><b>專用飼料定量</b>：約每天 2 大匙，不能用兔子飼料代替。</li>
+                <li><b>每天新鮮蔬菜</b>：少量多樣，幾小時後收走剩菜。</li>
+                <li><b>水果只當點心</b>：不超過每天食量的 5%。</li>
+                <li><b>水隨時要有</b>：維生素 C 別加在水裡，很快就分解。</li>
+              </ol>
+            </div>
+          </div>
+          <h3 class="sub-title">翻牌挑戰：點卡片看答案</h3>
+          <!-- 食物翻牌卡（script.js 依資料產生） -->
+          <div class="grid" id="foodGrid"></div>
+          <p class="small">資料來源：<a href="https://www.merckvetmanual.com/all-other-pets/guinea-pigs/diet-for-a-guinea-pig">MSD 獸醫手冊：飲食</a>、<a href="https://www.merckvetmanual.com/all-other-pets/guinea-pigs/nutritional-problems-of-guinea-pigs">MSD 獸醫手冊：營養問題</a>、<a href="https://healthtopics.vetmed.ucdavis.edu/node/1126">UC Davis 獸醫學院</a>。換食物要慢慢來，天竺鼠腸胃很敏感。</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- ==================== 健康警訊 ==================== -->
+    <div class="view" data-view="health" data-title="健康警訊" hidden>
+      <section class="band">
+        <div class="wrap">
+          <h2>牠不會說痛，你要會看</h2>
+          <p class="lead">天竺鼠常會隱藏病痛。餵食時花 1 分鐘，勾選今天觀察到的狀況。</p>
+          <!-- 警訊勾選清單（script.js 依資料產生） -->
+          <div class="checks" id="checks"></div>
+          <div class="verdict" id="verdict" aria-live="polite">目前沒有勾選任何警訊。</div>
+          <div class="grid">
+            <div class="card"><h3>怕熱不怕冷</h3><p>適合約 18 到 26°C，高溫潮濕容易中暑，台灣夏天要特別注意。</p></div>
+            <div class="card"><h3>牙齒問題很常見</h3><p>在家很難發現，建議每年健康檢查一次。牧草能幫助磨牙。</p></div>
+            <div class="card"><h3>晨昏型動物</h3><p>天竺鼠偏好在清晨與黃昏活動，不要強迫牠配合飼主作息。</p></div>
+          </div>
+          <p class="small">資料來源：<a href="https://www.merckvetmanual.com/all-other-pets/guinea-pigs/nutritional-problems-of-guinea-pigs">MSD 獸醫手冊</a>、<a href="https://healthtopics.vetmed.ucdavis.edu/node/1126">UC Davis 獸醫學院</a>、<a href="https://animal.moa.gov.tw/public/upload/Know_ArticleFile/251224011700058845FQRR5.pdf">農業部「哺乳類寵物飼養與照顧指南」</a>。本清單是提醒用途，無法取代獸醫診斷。</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- ==================== 找醫院 ==================== -->
+    <div class="view" data-view="vet" data-title="找醫院" hidden>
+      <section class="band warm">
+        <div class="wrap">
+          <h2>緊急時，附近哪裡能看天竺鼠？</h2>
+          <div class="mapcard">
+            <div>
+              <p>不是每間動物醫院都看天竺鼠這類特殊寵物。趁牠健康時先找好一間，把電話存進手機。</p>
+              <div class="btns">
+                <a class="btn" href="https://www.google.com/maps/search/%E7%89%B9%E6%AE%8A%E5%AF%B5%E7%89%A9+%E5%8B%95%E7%89%A9%E9%86%AB%E9%99%A2">📍 找我附近的醫院</a>
+              </div>
+              <ul>
+                <li>先打電話問：「請問有看天竺鼠嗎？」</li>
+                <li>用有通風的外出籠，放入牧草。</li>
+                <li>記下症狀開始時間、最近吃了什麼，可拍影片給獸醫看。</li>
+              </ul>
+            </div>
+            <div class="mapfig">
+              <!-- 想換成固定一間醫院：把 q= 後面改成那間醫院的名稱或地址 -->
+              <iframe title="附近動物醫院地圖" loading="lazy" src="https://maps.google.com/maps?q=%E7%89%B9%E6%AE%8A%E5%AF%B5%E7%89%A9%20%E5%8B%95%E7%89%A9%E9%86%AB%E9%99%A2&amp;z=13&amp;output=embed"></iframe>
+            </div>
+          </div>
+          <p class="small">在手機上打開按鈕，Google 地圖會依你所在的位置列出附近結果。</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- ==================== 闖關測驗 ==================== -->
+    <div class="view" data-view="quiz" data-title="闖關測驗" hidden>
+      <section class="band quiz">
+        <div class="wrap">
+          <h2>你是合格的天竺鼠飼主嗎？</h2>
+          <p class="lead">5 題闖關，答完馬上看分數。</p>
+          <!-- 題目區（script.js 依資料產生） -->
+          <div class="qbox" id="qbox"></div>
+          <!-- 想改用 Google 表單：表單按「傳送」→「<>」複製 iframe 貼在這裡，height 建議設 1500 -->
+        </div>
+      </section>
+    </div>
+
+    <!-- ==================== 聯絡我們 ==================== -->
+    <div class="view" data-view="contact" data-title="聯絡我們" hidden>
+      <section class="band contact">
+        <div class="wrap">
+          <h2>找到我們</h2>
+          <p class="lead">對網站內容有疑問，或想分享你家天竺鼠的故事？歡迎來電或到所辦找我們。</p>
+          <div class="contact-grid">
+
+            <!-- 左：牧草袋吊牌風格的資訊卡，上緣有一隻小天竺鼠散步 -->
+            <div class="contact-tag">
+              <div class="card-track" id="cardTrack" aria-hidden="true"></div>
+              <div class="tag-head">
+                <span>CONTACT</span>
+                <span class="open-badge" id="openBadge">服務時間 9:00–17:30</span>
+              </div>
+              <ul class="tag-rows">
+                <li>
+                  <span class="ico" aria-hidden="true">📞</span>
+                  <div>
+                    <div class="lbl">電話</div>
+                    <a class="val" href="tel:+88635712121">03-571-2121</a>
+                    <div class="sub">國際撥號 +886-3-5712121</div>
+                  </div>
+                </li>
+                <li>
+                  <span class="ico" aria-hidden="true">📍</span>
+                  <div>
+                    <div class="lbl">地址</div>
+                    <div class="val">300 新竹市大學路 1001 號</div>
+                    <div class="sub">國立陽明交通大學 人社一館二樓 212A</div>
+                    <div class="row-actions">
+                      <button class="chip" type="button" id="copyAddr">複製地址</button>
+                      <a class="chip" href="https://www.google.com/maps/dir/?api=1&amp;destination=%E6%96%B0%E7%AB%B9%E5%B8%82%E5%A4%A7%E5%AD%B8%E8%B7%AF1001%E8%99%9F">開啟導航</a>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <span class="ico" aria-hidden="true">🕘</span>
+                  <div>
+                    <div class="lbl">服務時間</div>
+                    <div class="val">9:00 – 17:30</div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <!-- 右：地圖 -->
+            <figure class="contact-map">
+              <iframe title="國立陽明交通大學教育研究所地圖" loading="lazy" src="https://maps.google.com/maps?q=%E5%9C%8B%E7%AB%8B%E9%99%BD%E6%98%8E%E4%BA%A4%E9%80%9A%E5%A4%A7%E5%AD%B8%E6%95%99%E8%82%B2%E7%A0%94%E7%A9%B6%E6%89%80&amp;z=16&amp;output=embed"></iframe>
+              <figcaption>📌 人社一館二樓 212A・國立陽明交通大學教育研究所</figcaption>
+            </figure>
+
+          </div>
+        </div>
+      </section>
+    </div>
+
+  </main>
+
+  <!-- ==================== 頁尾 ==================== -->
+  <footer class="band site-footer">
+    <!-- 上緣：一排牧草，兩隻小天竺鼠在上面散步 -->
+    <div class="footer-hay" aria-hidden="true"></div>
+    <div class="card-track footer-track" id="footerTrack" aria-hidden="true"></div>
+
+    <div class="wrap">
+      <div class="footer-head">
+        <h3>📚 資料來源</h3>
+        <p>本站內容整理自以下獸醫與官方資料，點卡片可查看原文。</p>
+      </div>
+      <ul class="source-grid">
+        <li>
+          <a class="source" href="https://www.merckvetmanual.com/all-other-pets/guinea-pigs/diet-for-a-guinea-pig">
+            <span class="src-ico" aria-hidden="true">📘</span>
+            <span class="src-body"><span class="src-org">MSD 獸醫手冊</span><span class="src-title">Diet for a Guinea Pig</span><span class="src-tag">飲食</span></span>
+            <span class="src-arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+        <li>
+          <a class="source" href="https://www.merckvetmanual.com/all-other-pets/guinea-pigs/nutritional-problems-of-guinea-pigs">
+            <span class="src-ico" aria-hidden="true">📗</span>
+            <span class="src-body"><span class="src-org">MSD 獸醫手冊</span><span class="src-title">Nutritional Problems of Guinea Pigs</span><span class="src-tag">營養問題</span></span>
+            <span class="src-arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+        <li>
+          <a class="source" href="https://healthtopics.vetmed.ucdavis.edu/node/1126">
+            <span class="src-ico" aria-hidden="true">🎓</span>
+            <span class="src-body"><span class="src-org">UC Davis 獸醫學院</span><span class="src-title">Guinea Pig Care</span><span class="src-tag">照顧指南</span></span>
+            <span class="src-arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+        <li>
+          <a class="source" href="https://petmd.com/exotic/sounds-guinea-pigs">
+            <span class="src-ico" aria-hidden="true">🎧</span>
+            <span class="src-body"><span class="src-org">PetMD</span><span class="src-title">Sounds of Guinea Pigs</span><span class="src-tag">叫聲</span></span>
+            <span class="src-arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+        <li>
+          <a class="source" href="https://animal.moa.gov.tw/public/upload/Know_ArticleFile/251224011700058845FQRR5.pdf">
+            <span class="src-ico" aria-hidden="true">🏛️</span>
+            <span class="src-body"><span class="src-org">農業部</span><span class="src-title">哺乳類寵物飼養與照顧指南</span><span class="src-tag">PDF・飼養指南</span></span>
+            <span class="src-arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+      </ul>
+      <div class="footer-bottom">
+        <span>國立陽明交通大學教育研究所　行動學習課程作品</span>
+        <span>天竺鼠新手飼主行動學習網站</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 回到最上面（捲動超過 300px 才出現） -->
+  <button class="to-top" id="toTop" type="button" aria-label="回到最上面">↑ 回到最上面</button>
+
+  <script src="./script.js"></script>
+</body>
+</html>
